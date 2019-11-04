@@ -1,12 +1,25 @@
 import pyperclip
+from datetime import datetime
 
-AFFILIATE_CODE = '&tag=pybo0f-20'
 
-url = 'pyperclip.paste()'
+def main():
+    now = datetime.strftime(datetime.now(), "%Y-%b-%d-%I%M%p")
+    new_cboard = None
+    current_clipboard_contents = ''
 
-if 'amazon' not in url:
-    print('Not an Amazon link')
-else:
-    new_link = url + AFFILIATE_CODE
-    pyperclip.copy(new_link)
-    print('Affiliate link generated and copied to clipboard')
+    with open('clipboard.txt', 'a', newline='') as f:
+        f.write(f'\nCopy history initiated at {now}\n')
+    while pyperclip.paste() != 'exit'.lower():
+        if new_cboard != current_clipboard_contents:
+            current_clipboard_contents = pyperclip.paste()
+            new_cboard = pyperclip.paste()
+            with open('clipboard.txt', 'a', newline='') as f:
+                f.write(f'{current_clipboard_contents}\n\n')
+        else:
+            new_cboard = pyperclip.paste()
+
+
+main()
+
+if __name__ == '__main__':
+    main()
